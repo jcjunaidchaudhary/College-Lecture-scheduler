@@ -24,7 +24,7 @@ def create_app():
         url_prefix=f"/api/{md_blueprint.url_prefix}",
     )
     
-    from app.md.models import User, Room, Subject, Lab, Time, Instructor,Sem 
+    from app.md.models import User, Room, Course, Lab, Time, Faculty,Sem 
 
     create_database(app)
 

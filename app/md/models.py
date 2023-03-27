@@ -9,11 +9,11 @@ class User(db.Model):
     username = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
     _password = db.Column(db.String(150))
-    room = db.relationship('Room')
-    lab = db.relationship('Lab')
-    instructor = db.relationship('Instructor')
-    time = db.relationship('Time')
-    Subject = db.relationship('Subject')
+    # room = db.relationship('Room')
+    # lab = db.relationship('Lab')
+    # faculty = db.relationship('faculty')
+    # time = db.relationship('Time')
+    # course = db.relationship('Course')
     # chapter = db.relationship('Chapter')
 
 
@@ -38,65 +38,72 @@ class User(db.Model):
         return check_password_hash(self._password, password)
 
 
+class Sem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Integer)
+    faculty_count=db.Column(db.Integer)
+    sub_count=db.Column(db.Integer)
+    # teaching_hour=db.Column(db.Integer)
+    course = db.relationship('Course')
+    lab = db.relationship('Lab')
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+    def __repr__(self) -> str:
+        return f"<Sem:{self.name}>"
+    
+
+
+class Course(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    code=db.Column(db.String(10),unique=True)
+    name=db.Column(db.String(12))
+    teaching_hour=db.Column(db.Integer)
+    # chapter = db.relationship('Chapter', backref='subject')
+    sem_id = db.Column(db.Integer, db.ForeignKey('sem.id'))
+    faculty=db.relationship('Faculty',backref='course',uselist=False)
+
+    def __repr__(self) -> str:
+        return f"<Sub:{self.name}>"
+    
+    
+class Faculty(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    uid= db.Column(db.String(12))
+    name= db.Column(db.String(12))
+    teaching_hour=db.Column(db.Integer)
+    subject_code=db.Column(db.String, db.ForeignKey('course.code'))
+
+    def __repr__(self) -> str:
+        return f"<Faculty:{self.name}>"
+
 class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number=db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self) -> str:
-        return f"<Room:{self.room_number}>"
-
-
-
+        return f"<Room:{self.number}>"
+    
 class Lab(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     lab=db.Column(db.String(20))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    sem_id = db.Column(db.Integer, db.ForeignKey('sem.id'))
 
     def __repr__(self) -> str:
         return f"<Lab:{self.lab}>"
 
 
-
-
-class Sem(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __repr__(self) -> str:
-        return f"<Sem:{self.name}>"
-
 class Time(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start=db.Column(db.Integer)
     end=db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self) -> str:
         return f"<Time:{self.id}>"
 
-class Subject(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    code=db.Column(db.String(10),unique=True)
-    name=db.Column(db.String(12))
-    # chapter = db.relationship('Chapter', backref='subject')
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    instructor=db.relationship('Instructor',backref='subject',uselist=False)
 
-    def __repr__(self) -> str:
-        return f"<Sub:{self.sub_name}>"
     
-class Instructor(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    uid= db.Column(db.String(12))
-    name= db.Column(db.String(12))
-    teaching_hour=db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    subject_code=db.Column(db.String, db.ForeignKey('subject.code'))
 
-    def __repr__(self) -> str:
-        return f"<Instructor:{self.name}>"
 
 
 # class Chapter(db.Model):

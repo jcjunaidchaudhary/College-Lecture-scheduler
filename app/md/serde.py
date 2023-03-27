@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields
 
-from app.md.models import Instructor, Lab, Room, Sem, Subject, Time
+from app.md.models import Faculty, Lab, Room, Sem, Course, Time
 
 
 class UserSchema(Schema):
@@ -28,13 +28,14 @@ class LabSchema(Schema):
         fields = [
             "id",
             "lab",
+            "sem_id"
             
         ]
 
-class InstructorSchema(Schema):
+class FacultySchema(Schema):
     class Meta:
         load_instance = True
-        model = Instructor
+        model = Faculty
         fields = [
             "id",
             "uid",
@@ -51,6 +52,8 @@ class SemSchema(Schema):
         fields = [
             "id",
             "name",
+            "faculty_count",
+            "sub_count"
             
         ]
 
@@ -63,14 +66,16 @@ class TimeSchema(Schema):
             "start",
             "end"
         ]
-class SubjectSchema(Schema):
+class CourseSchema(Schema):
     class Meta:
         load_instance = True
-        model = Subject
+        model = Course
         fields = [
             "id",
             "code",
-            "name"
+            "name",
+            "teaching_hour",
+            "sem_id",
         ]
 # class ChapterSchema(Schema):
 #     class Meta:
